@@ -74,7 +74,7 @@ const addSportField = async (req, res) => {
 
 const updateSportField = async (req, res) => {
     try {
-        let { id } = req.query;
+        let { id } = req.body;
 
         await db.SportField.update({...req.body}, {
             where: {

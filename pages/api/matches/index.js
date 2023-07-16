@@ -72,7 +72,7 @@ const addMatch = async (req, res) => {
 const editMatch = async(req, res) => {
   try {
     //Hacer cambios en el registro con el ID correspondiente
-    const {id} = req.query;
+    const {id} = req.body;
     //Aplicar Cambios
     await db.Match.update({...req.body}, {
       where: {
@@ -114,7 +114,7 @@ const deleteMatch = async(req, res) =>{
         id: id
       }
     });
-    await PositionTableLeague();
+    // await PositionTableLeague();
     res.json({
       message: "El partido fue eliminado"
     });
