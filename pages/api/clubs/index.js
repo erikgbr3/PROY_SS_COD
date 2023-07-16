@@ -86,7 +86,7 @@ const addClub = async (req, res) => {
 
 const updateClub = async (req, res) => {
     try {
-        let { id } = req.query;
+        let { id } = req.body;
 
         await db.Club.update({...req.body}, {
             where: {
