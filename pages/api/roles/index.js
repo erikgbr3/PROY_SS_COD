@@ -47,9 +47,9 @@ const addRole = async (req, res) => {
     try {
         console.log(req.body);
         
-        const league = await db.Role.create({...req.body});
+        const role = await db.Role.create({...req.body});
         res.json({
-            league,
+            role,
             message: 'Se registro el Rol correctamente'
         });
     } catch (error) {

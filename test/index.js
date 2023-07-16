@@ -1,1 +1,2 @@
-//agrega aqui las pruebas
+require('./calc_test');
+require('./roles-test');
