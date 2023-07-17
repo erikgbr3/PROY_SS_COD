@@ -11,6 +11,7 @@ module.exports = {
       },
       leagueId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Leagues',
           key: 'id'
@@ -18,6 +19,7 @@ module.exports = {
       },
       clubId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Clubs',
           key: 'id'
