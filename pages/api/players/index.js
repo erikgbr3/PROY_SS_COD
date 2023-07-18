@@ -76,7 +76,7 @@ const updatePlayer = async (req, res) => {
     try {
         let { id } = req.query;
 
-        await db.Player.update({...req.body}, {
+        await db.Player.update({...req.body}, { 
             where: {
                 id : id
             },

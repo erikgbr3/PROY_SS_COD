@@ -128,7 +128,7 @@ const updateRole = async (req, res) => {
         let errors = [];
         if(error.errors){
             errors = error.errors.map((item) => ({
-                error: item.message,
+                error: item.message, 
                 field: item.path,
             }));
         }
