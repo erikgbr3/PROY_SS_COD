@@ -26,8 +26,32 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Suscription.init({
-    leagueId: DataTypes.INTEGER,
-    clubId: DataTypes.INTEGER
+    leagueId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate:{
+        notNull: {
+          msg: "La liga de registro es obligatoria"
+        },
+        is: {
+          args: /^\d+$/,
+          msg: "Solo debe agregar el Id de la liga a la que desea ingresar"
+        },
+      }
+    },
+    clubId: {
+      type:DataTypes.INTEGER,
+      allowNull: false,
+      validate:{
+        notNull: {
+          msg: "El club es necesario para registrarse",
+        },
+        is:{
+          args: /^\d+$/,
+          msg: "Solo debe agregar el Id del club que se va a registrar"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Suscription',
