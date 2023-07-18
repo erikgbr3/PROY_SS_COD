@@ -6,6 +6,17 @@ chai.use(chaiHttp);
 const url = 'http://localhost:3000/api';
 
 describe("Mostrar tarjetas de falta", () => {
+    it("Debe mostrar una tarjeta", (done) => {
+        chai.request(url)
+        .get('/foulCards?id=2')
+        .send({})
+        .end( function(err, res){
+            console.log(res.body);
+            expect(res).to.have.status(200);
+            done();
+        })
+    })
+
     it("Debe mostrar lista de tarjetas", (done) => {
         chai.request(url)
         .get('/foulCards')
@@ -13,6 +24,17 @@ describe("Mostrar tarjetas de falta", () => {
         .end( function(err, res){
             console.log(res.body);
             expect(res).to.have.status(200);
+            done();
+        })
+    })
+
+    it("Debe dar un mensaje de error cuando no se encuentre la tarjeta", (done) => {
+        chai.request(url)
+        .get('/foulCards?id=3')
+        .send({})
+        .end( function(err, res){
+            console.log(res.body);
+            expect(res).to.have.status(404);
             done();
         })
     })

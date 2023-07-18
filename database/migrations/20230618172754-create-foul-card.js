@@ -11,6 +11,7 @@ module.exports = {
       },
       playerId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Players',
           key: 'id'
@@ -18,6 +19,7 @@ module.exports = {
       },
       matchId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Matches',
           key: 'id'

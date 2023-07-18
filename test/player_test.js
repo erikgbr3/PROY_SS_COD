@@ -26,10 +26,10 @@ describe("Registrar jugador", () => {
             id: 2,
             name: "player test",
             lastname: "lastname test",
-            age: 21,
-            numberjersey: 17,
-            position: 6,
-            celphone: "2345678910",
+            age: "21",
+            numberjersey: "17",
+            position: "6",
+            cellphone: "2345678910",
             curp: "tssiiiq1122001",
             clubId: 1
         })
@@ -50,10 +50,10 @@ describe("Actualizar juagdor", () => {
         .send({
             name: "Player test",
             lastname: "Lastname test",
-            age: 20,
-            numberjersey: 11,
-            position: 6,
-            celphone: "2345678910",
+            age: "20",
+            numberjersey: "11",
+            position: "6",
+            cellphone: "2345678910",
             curp: "tssiiiq1122001",
             clubId: 1
         })

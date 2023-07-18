@@ -21,10 +21,18 @@ export default function handler(req, res){
 
 const getPlayers = async (req, res) => {
     try {
-            const players = await db.Player.findAll({
-            });
+        const { id } = req.query;
 
-        return res.json(players);
+        if (id) {
+            const player = await db.Player.findByPk(id);
+            if (!player) {
+                return res.status(404).json({ error: true, message: 'No se encontró el jugador' });
+            }
+            return res.json(player);
+        } else {
+            const player = await db.Player.findAll();
+            return res.json(player);
+        }
     } catch(error){
         console.log(error);
         let errors = [];
@@ -74,16 +82,31 @@ const addPlayer = async (req, res) => {
 
 const updatePlayer = async (req, res) => {
     try {
-        let { id } = req.query;
+        const { id, ...updates } = req.body;
 
-        await db.Player.update({...req.body}, { 
-            where: {
-                id : id
-            },
-        })
-        res.json({
-            message: 'El jugador fue actualizado'
+        if (!id || Object.keys(updates).length === 0) {
+        res.status(400).json({
+            error: 'Faltan datos para actualizar o el ID es incorrecto'
         });
+        } else {
+        const player = await db.Player.findOne({ where: { id } });
+
+        if (!player) {
+            res.status(400).json({
+            error: true,
+            message: 'ID de jugador incorrecto'
+            });
+        } else { 
+            await db.player.update({...updates}, {
+            where: {
+                id: id
+            }
+            });
+            res.json({
+            message: 'El jugador fue actualizado'
+            });
+        }
+        }
 
     } catch(error){
         console.log(error);
