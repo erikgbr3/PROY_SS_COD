@@ -32,14 +32,87 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Player.init({
-    name: DataTypes.STRING,
-    lastname: DataTypes.STRING,
-    age: DataTypes.STRING,
-    numberjersey: DataTypes.STRING,
-    position: DataTypes.STRING,
-    cellphone: DataTypes.STRING,
-    curp: DataTypes.STRING,
-    clubId: DataTypes.INTEGER
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El nombre del jugador es obligatorio"
+        },
+        isAlpha: {
+          msg: "Solo se admiten letras"
+        }
+      }
+    },
+    lastname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El Apellido es obligatorio"
+        },
+        isAlpha: {
+          msg: "Solo se admiten letras"
+        }
+      }
+    },
+    age: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "La edad es obligatoria"
+        }
+      }
+    },
+    numberjersey: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El número del jersey es obligatorio"
+        }
+      }
+    },
+    position: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El número de posición es obligatorio"
+        }
+      }
+    },
+    cellphone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El número de teléfono es obligatorio"
+        }
+      }
+    },
+    curp: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "La CURP es obligatoria"
+        }
+      }
+    },
+    clubId: {
+      type: DataTypes.INTEGER,
+      allowNull: false, 
+      validate: {
+        notNull: {
+          msg: "El Id del club es obligatorio"
+        },
+        isNumeric: {
+          msg: "Solo se admiten números"
+        }
+      }
+    },
   }, {
     sequelize,
     modelName: 'Player',

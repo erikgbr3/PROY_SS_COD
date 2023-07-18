@@ -143,7 +143,7 @@ const updateClub = async (req, res) => {
             errors = error.errors.map((item) => ({
                 error: item.message,
                 field: item.path,
-            }));
+            })); 
         }
         return res.status(400).json(
             {

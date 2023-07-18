@@ -26,9 +26,42 @@ module.exports = (sequelize, DataTypes) => {
     } 
   }
   GoalScore.init({
-    playerId: DataTypes.INTEGER,
-    score: DataTypes.INTEGER,
-    matchId: DataTypes.INTEGER
+    playerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El Id del jugador es obligatorio"
+        },
+        isNumeric: {
+          msg: "Solo se admiten números"
+        }
+      }
+    },
+    score: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El puntaje es obligatorio"
+        },
+        isNumeric: {
+        msg: "Solo se admiten números"
+        }
+      }
+    },
+    matchId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El Id del partido es obligatorio"
+        },
+        isNumeric: {
+        msg: "Solo se admiten números"
+        },
+      }
+    },
   }, {
     sequelize,
     modelName: 'GoalScore',

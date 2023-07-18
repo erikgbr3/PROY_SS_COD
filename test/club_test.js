@@ -68,7 +68,7 @@ describe('Eliminación de clubs', ()=>{
                 // console.log(res.body)
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
-                done();
+                done(); 
             });
     });
 });
