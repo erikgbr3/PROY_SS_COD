@@ -28,7 +28,7 @@ describe("Mostrar Rol", () => {
         })
     })
 
-    it("Debe mostrar un mensaje de que no se encontro el rol", (done) => {
+    it("Debe mostrar un mensaje de no encontrado, No se encontro el rol", (done) => {
         chai.request(url)
         .get('/roles?id=7')
         .send({})
@@ -101,7 +101,7 @@ describe("Actualizar Rol", () => {
         })
     })
 
-    it("Debe dar un mensaje de error de que faltan datos para actualizar o el id es icorrecto", (done) => {
+    it("Debe mostrar un mensaje de error, Faltan datos para actualizar o el id es icorrecto", (done) => {
         chai.request(url)
         .put('/roles')
         .send({})
@@ -113,7 +113,7 @@ describe("Actualizar Rol", () => {
         })
     })
 
-    it("Debe dar un mensaje de error de que el ID es incorrecto", (done) => {
+    it("Debe mostrar un mensaje de error, El ID es incorrecto", (done) => {
         chai.request(url)
         .put('/roles')
         .send({})
@@ -130,7 +130,6 @@ describe("Eliminar Rol", () => {
     it("Debe eliminar un Rol existente", (done) => {
         chai.request(url)
         .delete('/roles?id=3')
-        .send({})
         .end( function(err, res){
             console.log(res.body);
             expect(res).to.have.status(200);
@@ -139,21 +138,20 @@ describe("Eliminar Rol", () => {
         })
     })
 
-    it("Debe dar un mensaje de que ocurrio un error a porcesar la petición", (done) => {
+    it("Debe mostrar un mensaje de error, Ocurrio un error a procesar la petición", (done) => {
         chai.request(url)
-        .delete('/roles')
-        .send({})
+        .delete('/roles?=')
         .end( function(err, res){
             console.log(res.body);
             expect(res).to.have.status(400);
+            expect(res.body).to.have.property('error');
             done();
         })
     })
 
-    it("Debe dar un mensaje de que el Rol no existe", (done) => {
+    it("Debe mostrar un mensaje de no encontrado, El rol no existe", (done) => {
         chai.request(url)
         .delete('/roles?id=5')
-        .send({})
         .end( function(err, res){
             console.log(res.body);
             expect(res).to.have.status(404);

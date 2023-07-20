@@ -97,7 +97,7 @@ const updatePlayer = async (req, res) => {
             message: 'ID de jugador incorrecto'
             });
         } else { 
-            await db.player.update({...updates}, {
+            await db.Player.update({...updates}, {
             where: {
                 id: id
             }

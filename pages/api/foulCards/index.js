@@ -127,15 +127,22 @@ const updateCard = async(req, res) => {
 //eliminar amonestación
 const deleteCard = async(req, res) =>{
   try {
-    const {id} = req.query;
-    await db.FoulCard.destroy({
-      where: {
-        id: id
+    const { id } = req.query;
+
+      const foulCard = await db.FoulCard.findOne({ where: { id: id } });
+
+      if (!foulCard) {
+        return res.status(404).json({
+          error: true,
+          message: 'No se encontró la tarjeta',
+        });
       }
-    });
-    res.json({
-      message: "La tarjeta fue quitada"
-    });
+
+        await foulCard.destroy();
+
+        res.json({
+            message: 'La tarjeta fue quitada'
+        })
   }catch (error){
     console.log(error);
     let errors = [];

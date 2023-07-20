@@ -39,7 +39,8 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: "El nombre del jugador es obligatorio"
         },
-        isAlpha: {
+        is: {
+          args: /^[a-zA-ZáéíóúñÁÉÍÓÚ \s]+$/,
           msg: "Solo se admiten letras"
         }
       }
@@ -51,7 +52,8 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: "El Apellido es obligatorio"
         },
-        isAlpha: {
+        is: {
+          args: /^[a-zA-ZáéíóúñÁÉÍÓÚ \s]+$/,
           msg: "Solo se admiten letras"
         }
       }
@@ -62,6 +64,9 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           msg: "La edad es obligatoria"
+        },
+        isNumeric: {
+          msg: "Solo se admiten números"
         }
       }
     },
@@ -71,6 +76,9 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           msg: "El número del jersey es obligatorio"
+        },
+        isNumeric: {
+          msg: "Solo se admiten números"
         }
       }
     },
@@ -80,6 +88,9 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           msg: "El número de posición es obligatorio"
+        },
+        isNumeric: {
+          msg: "Solo se admiten números"
         }
       }
     },
