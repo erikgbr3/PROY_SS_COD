@@ -10,12 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       locality: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       fieldId: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'SportFields',
@@ -23,6 +26,7 @@ module.exports = {
         }
       },
       ownerTeamId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       createdAt: {

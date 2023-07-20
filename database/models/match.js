@@ -44,14 +44,62 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Match.init({
-    homeTeamId: DataTypes.INTEGER,
-    scoreHome: DataTypes.INTEGER,
-    visitorTeamId: DataTypes.INTEGER,
-    scoreVisitor: DataTypes.INTEGER,
+    homeTeamId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate:{
+        isInt: {
+          msg: "Solo se permiten números."
+        }
+      }
+    },
+    scoreHome: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate:{
+        isInt: {
+          msg: "Solo se permiten números."
+        }
+      }
+    },
+    visitorTeamId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate:{
+        isInt: {
+          msg: "Solo se permiten números."
+        }
+      }
+    },
+    scoreVisitor: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate:{
+        isInt: {
+          msg: "Solo se permiten números."
+        }
+      }
+    },
     date: DataTypes.STRING,
     hour: DataTypes.STRING,
-    leagueId: DataTypes.INTEGER,
-    refereeId: DataTypes.INTEGER
+    leagueId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate:{
+        isInt: {
+          msg: "Solo se permiten números."
+        }
+      }
+    },
+    refereeId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate:{
+        isInt: {
+          msg: "Solo se permiten números."
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Match',

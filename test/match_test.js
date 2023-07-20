@@ -23,20 +23,63 @@ describe('Registro de partidos', ()=>{
             chai.request(url)
                 .post('/matches')
                 .send({
-                    homeTeamId: 5,
-                    scoreHome: 4,
-                    visitorTeamId: 3,
-                    scoreVisitor: 2,
-                    date: "2023/07/16",
-                    hour: "13:00",
-                    leagueId: 4,
-                    refereeId: 5
+                    homeTeamId: 3,
+                    scoreHome: 10,
+                    visitorTeamId: 2,
+                    scoreVisitor: 5,
+                    date: "2023/05/21",
+                    hour: "18:00",
+                    leagueId: 2,
+                    refereeId: 1
                 })
                 .end((err, res) => {
                     // console.log(res.body)
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('matches');
                     expect(res.body).to.have.property('message');
+                    done();
+                });
+        });
+        it('No debe permitir registrar el partido por datos faltantes', (done) =>{
+            chai.request(url)
+                .post('/matches')
+                .send({
+                    homeTeamId: 3,
+                    visitorTeamId: 2,
+                    scoreVisitor: 5,
+                    date: "2023/05/21",
+                    hour: "22:00",
+                    leagueId: 2,
+                    refereeId: 1
+                })
+                .end((err, res) => {
+                    // console.log(res.body)
+                    expect(res).to.have.status(400);
+                    expect(res.body).to.have.property('error');
+                    expect(res.body).to.have.property('message');
+                    expect(res.body).to.have.property('errors');
+                    done();
+                });
+        });
+        it('No debe permitir registrar el partido por datos incorrectos', (done) =>{
+            chai.request(url)
+                .post('/matches')
+                .send({
+                    homeTeamId: 3,
+                    scoreHome: "dos",
+                    visitorTeamId: 2,
+                    scoreVisitor: 5,
+                    date: "2023/05/21",
+                    hour: "16:00",
+                    leagueId: 2,
+                    refereeId: 1
+                })
+                .end((err, res) => {
+                    // console.log(res.body)
+                    expect(res).to.have.status(400);
+                    expect(res.body).to.have.property('error');
+                    expect(res.body).to.have.property('message');
+                    expect(res.body).to.have.property('errors');
                     done();
                 });
         });
@@ -47,14 +90,14 @@ describe('Actualización de partidos', ()=>{
         chai.request(url)
             .put('/matches')
             .send({
-                id: 13,
-                homeTeamId: 5,
+                id: 7,
+                homeTeamId: 2,
                 scoreHome: 4,
                 visitorTeamId: 3,
                 scoreVisitor: 2,
-                date: "2023/07/16",
-                hour: "12:00",
-                leagueId: 4,
+                date: "2023/06/16",
+                hour: "09:00",
+                leagueId: 2,
                 refereeId: 5
             })
             .end((err, res) => {
@@ -66,12 +109,57 @@ describe('Actualización de partidos', ()=>{
                 done();
             });
     });
+    it('No debe actualizar el partido por datos faltantes', (done) =>{
+        chai.request(url)
+            .put('/matches')
+            .send({
+                homeTeamId: 3,
+                scoreHome: 2,
+                visitorTeamId: 2,
+                scoreVisitor: 5,
+                date: "2023/05/21",
+                hour: "12:00",
+                leagueId: 2,
+                refereeId: 1
+            })
+            .end((err, res) => {
+                // console.log(res.body)
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.have.property('message');
+                expect(res.body).to.have.property('errors');
+                done();
+            });
+    });
+    it('No debe actualizar el partido por datos incorrectos', (done) =>{
+        chai.request(url)
+            .put('/matches')
+            .send({
+                id: 10,
+                homeTeamId: "tres",
+                scoreHome: 2,
+                visitorTeamId: 2,
+                scoreVisitor: 5,
+                date: "2023/05/21",
+                hour: "21:00",
+                leagueId: 2,
+                refereeId: 1
+            })
+            .end((err, res) => {
+                // console.log(res.body)
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.have.property('message');
+                expect(res.body).to.have.property('errors');
+                done();
+            });
+    });
 });
 
 describe('Eliminación de partidos', ()=>{
     it('Debe eliminar un partido', (done) =>{
         chai.request(url)
-            .delete('/matches?id=12')
+            .delete('/matches?id=5')
             .send({
                 homeTeamId: 4,
                 scoreHome: 1,
@@ -85,6 +173,49 @@ describe('Eliminación de partidos', ()=>{
             .end((err, res) => {
                 // console.log(res.body)
                 expect(res).to.have.status(200);
+                expect(res.body).to.have.property('message');
+                done();
+            });
+    });
+    it('No debe eliminar el partido por datos faltantes', (done) =>{
+        chai.request(url)
+            .delete('/matches')
+            .send({
+                homeTeamId: 4,
+                scoreHome: 1,
+                visitorTeamId: 3,
+                scoreVisitor: 2,
+                date: "2023/01/06",
+                hour: "14:00",
+                leagueId: 2,
+                refereeId: 2,
+            })
+            .end((err, res) => {
+                // console.log(res.body)
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.have.property('message');
+                expect(res.body).to.have.property('errors');
+                done();
+            });
+    });
+    it('No debe eliminar el partido por datos incorrectos', (done) =>{
+        chai.request(url)
+            .delete('/matches?id=40')
+            .send({
+                homeTeamId: 4,
+                scoreHome: 1,
+                visitorTeamId: 3,
+                scoreVisitor: 2,
+                date: "2023/01/06",
+                hour: "14:00",
+                leagueId: 2,
+                refereeId: 2,
+            })
+            .end((err, res) => {
+                // console.log(res.body)
+                expect(res).to.have.status(404);
+                expect(res.body).to.have.property('error');
                 expect(res.body).to.have.property('message');
                 done();
             });
