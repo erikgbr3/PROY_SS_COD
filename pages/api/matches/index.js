@@ -108,16 +108,22 @@ const editMatch = async(req, res) => {
 //Eliminar Encuentro
 const deleteMatch = async(req, res) =>{
   try {
-    const {id} = req.query;
-    await db.Match.destroy({
-      where: {
-        id: id
+    const { id } = req.query;
+
+      const match = await db.Match.findOne({ where: { id: id } });
+
+      if (!match) {
+        return res.status(404).json({
+          error: true,
+          message: 'No se encontró el partido',
+        });
       }
-    });
-    // await PositionTableLeague();
-    res.json({
-      message: "El partido fue eliminado"
-    });
+
+        await match.destroy();
+
+        res.json({
+            message: 'El partido fue eliminado'
+        })
   }catch (error){
     console.log(error);
     let errors = [];
