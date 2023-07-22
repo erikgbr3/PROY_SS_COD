@@ -87,7 +87,7 @@ const addLeague = async (req, res) => {
 
 const updateLeague = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.query;
 
         await db.League.update({...req.body}, {
             where: {
@@ -118,7 +118,6 @@ const updateLeague = async (req, res) => {
   }
 
   const deleteLeague = async (req, res) => {
-    console.log('Delete ligue method called');
     try {
         const { id } = req.query;
 
@@ -133,7 +132,7 @@ const updateLeague = async (req, res) => {
 
         await league.destroy();
 
-        res.json({
+        res.status(200).json({
             message: 'La liga fue Eliminada'
         })
 

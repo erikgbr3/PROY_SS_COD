@@ -1,4 +1,7 @@
 //agrega aqui las pruebas
+require('./league_test');
+require('./suscription_test');
+require('./user_test');
 require('./sportField_test');
 require('./club_test');
 require('./match_test');
