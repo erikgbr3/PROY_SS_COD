@@ -20,7 +20,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Role.init({
-    role: DataTypes.STRING
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El rol es obligatorio"
+        },
+        is: {
+          args: /^[a-zA-ZáéíóúñÁÉÍÓÚ \s]+$/,
+          msg: "Solo se admiten letras"
+        }
+      }
+    },
   }, {
     sequelize,
     modelName: 'Role',
