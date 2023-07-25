@@ -23,16 +23,17 @@ describe('Registro de partidos', ()=>{
             chai.request(url)
                 .post('/matches')
                 .send({
-                    homeTeamId: 3,
+                    id: 2,
+                    homeTeamId: 2,
                     scoreHome: 10,
-                    visitorTeamId: 2,
+                    visitorTeamId: 1,
                     scoreVisitor: 5,
                     date: "2023/05/21",
                     hour: "18:00",
-                    leagueId: 2,
+                    leagueId: 1,
                     refereeId: 1
                 })
-                .end((err, res) => {
+                .end(function(err, res) {
                     // console.log(res.body)
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('matches');
@@ -52,7 +53,7 @@ describe('Registro de partidos', ()=>{
                     leagueId: 2,
                     refereeId: 1
                 })
-                .end((err, res) => {
+                .end(function(err, res) {
                     // console.log(res.body)
                     expect(res).to.have.status(400);
                     expect(res.body).to.have.property('error');
@@ -74,7 +75,7 @@ describe('Registro de partidos', ()=>{
                     leagueId: 2,
                     refereeId: 1
                 })
-                .end((err, res) => {
+                .end(function(err, res) {
                     // console.log(res.body)
                     expect(res).to.have.status(400);
                     expect(res.body).to.have.property('error');
@@ -90,17 +91,17 @@ describe('Actualización de partidos', ()=>{
         chai.request(url)
             .put('/matches')
             .send({
-                id: 7,
+                id: 2,
                 homeTeamId: 2,
                 scoreHome: 4,
-                visitorTeamId: 3,
+                visitorTeamId: 1,
                 scoreVisitor: 2,
                 date: "2023/06/16",
                 hour: "09:00",
-                leagueId: 2,
+                leagueId: 1,
                 refereeId: 5
             })
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('result');
@@ -122,7 +123,7 @@ describe('Actualización de partidos', ()=>{
                 leagueId: 2,
                 refereeId: 1
             })
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('error');
@@ -145,7 +146,7 @@ describe('Actualización de partidos', ()=>{
                 leagueId: 2,
                 refereeId: 1
             })
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('error');
@@ -159,18 +160,8 @@ describe('Actualización de partidos', ()=>{
 describe('Eliminación de partidos', ()=>{
     it('Debe eliminar un partido', (done) =>{
         chai.request(url)
-            .delete('/matches?id=5')
-            .send({
-                homeTeamId: 4,
-                scoreHome: 1,
-                visitorTeamId: 3,
-                scoreVisitor: 2,
-                date: "2023/01/06",
-                hour: "14:00",
-                leagueId: 2,
-                refereeId: 2,
-            })
-            .end((err, res) => {
+            .delete('/matches?id=2')
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
@@ -180,17 +171,7 @@ describe('Eliminación de partidos', ()=>{
     it('No debe eliminar el partido por datos faltantes', (done) =>{
         chai.request(url)
             .delete('/matches')
-            .send({
-                homeTeamId: 4,
-                scoreHome: 1,
-                visitorTeamId: 3,
-                scoreVisitor: 2,
-                date: "2023/01/06",
-                hour: "14:00",
-                leagueId: 2,
-                refereeId: 2,
-            })
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('error');
@@ -202,17 +183,7 @@ describe('Eliminación de partidos', ()=>{
     it('No debe eliminar el partido por datos incorrectos', (done) =>{
         chai.request(url)
             .delete('/matches?id=40')
-            .send({
-                homeTeamId: 4,
-                scoreHome: 1,
-                visitorTeamId: 3,
-                scoreVisitor: 2,
-                date: "2023/01/06",
-                hour: "14:00",
-                leagueId: 2,
-                refereeId: 2,
-            })
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(404);
                 expect(res.body).to.have.property('error');

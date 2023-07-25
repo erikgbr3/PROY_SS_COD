@@ -10,7 +10,7 @@ describe('Lista de clubs', ()=>{
         chai.request(url)
             .get('/clubs')
             .send({})
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(200);
                 done();
@@ -23,12 +23,13 @@ describe('Registro de clubs', ()=>{
             chai.request(url)
                 .post('/clubs')
                 .send({
+                    id: 3,
                     name: "Pericos",
                     locality: "Xuchapa",
                     fieldId: 2,
                     ownerTeamId: 1
                 })
-                .end((err, res) => {
+                .end(function(err, res) {
                     // console.log(res.body)
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('club');
@@ -45,7 +46,7 @@ describe('Registro de clubs', ()=>{
                     fieldId: 3,
                     ownerTeamId: 1
                 })
-                .end((err, res) => {
+                .end(function(err, res) {
                     // console.log(res.body)
                     expect(res).to.have.status(400);
                     expect(res.body).to.have.property('error');
@@ -63,7 +64,7 @@ describe('Registro de clubs', ()=>{
                     fieldId: "tres",
                     ownerTeamId: 1
                 })
-                .end((err, res) => {
+                .end(function(err, res) {
                     // console.log(res.body)
                     expect(res).to.have.status(400);
                     expect(res.body).to.have.property('error');
@@ -77,7 +78,7 @@ describe('Registro de clubs', ()=>{
 describe('Actualización de clubs', ()=>{
     it('Debe actualizar un club', (done) =>{
         chai.request(url)
-            .put('/sportFields')
+            .put('/clubs')
             .send({
                 id: 3,
                 name: "Pericos",
@@ -85,7 +86,7 @@ describe('Actualización de clubs', ()=>{
                 fieldId: 2,
                 ownerTeamId: 1
             })
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
@@ -94,14 +95,14 @@ describe('Actualización de clubs', ()=>{
     });
     it('No debe actualizar el club por datos faltantes', (done) =>{
         chai.request(url)
-            .put('/sportFields')
+            .put('/clubs')
             .send({
                 name: "Pericos",
                 locality: "Xuchapa",
                 fieldId: 4,
                 ownerTeamId: 1
             })
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('error');
@@ -112,7 +113,7 @@ describe('Actualización de clubs', ()=>{
     });
     it('No debe actualizar el club por datos incorrectos', (done) =>{
         chai.request(url)
-            .put('/sportFields')
+            .put('/clubs')
             .send({
                 id: 2,
                 name: 23,
@@ -120,7 +121,7 @@ describe('Actualización de clubs', ()=>{
                 fieldId: 4,
                 ownerTeamId: 1
             })
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('error');
@@ -134,9 +135,8 @@ describe('Actualización de clubs', ()=>{
 describe('Eliminación de clubs', ()=>{
     it('Debe eliminar un club', (done) =>{
         chai.request(url)
-            .delete('/clubs?id=4')
-            .send({})
-            .end((err, res) => {
+            .delete('/clubs?id=3')
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('message');
@@ -146,8 +146,7 @@ describe('Eliminación de clubs', ()=>{
     it('No debe eliminar el club por datos faltantes', (done) =>{
         chai.request(url)
             .delete('/clubs')
-            .send({})
-            .end((err, res) => {
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('error');
@@ -158,9 +157,8 @@ describe('Eliminación de clubs', ()=>{
     });
     it('No debe eliminar el club por datos erroneos', (done) =>{
         chai.request(url)
-            .delete('/clubs?id=202')
-            .send({})
-            .end((err, res) => {
+            .delete('/clubs?id=20')
+            .end(function(err, res) {
                 // console.log(res.body)
                 expect(res).to.have.status(404);
                 expect(res.body).to.have.property('error');

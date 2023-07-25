@@ -11,6 +11,7 @@ describe("Suscribir club a una liga", () =>{
     .post('/suscriptions')
     .send({
       //cuerpo
+      id: 1,
       leagueId: 1,
       clubId: 1
     })
@@ -90,7 +91,7 @@ describe("Actualización de una suscripción", () =>{
     .put('/suscriptions?id=1')
     .send({
       //cuerpo
-      leagueId: 8
+      clubId: 2
     })
     .end(function(err, res){
       expect(res).to.have.status(200);
@@ -134,7 +135,7 @@ describe("Actualización de una suscripción", () =>{
 describe("Eliminar la suscripción", () =>{
   it("Se debe eliminar la suscripción mediante el Id", (done) => {
     chai.request(url)
-    .delete('/suscriptions?id=4')
+    .delete('/suscriptions?id=1')
     .end(function(err, res){
       expect(res).to.have.status(200);
       expect(res.body).to.have.property("message");

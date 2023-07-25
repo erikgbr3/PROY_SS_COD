@@ -11,6 +11,7 @@ describe("Registro de Usuario", () =>{
     .post('/users')
     .send({
       //cuerpo
+      id: 2,
       username: "Eric Fdz",
       email: "eric2@gmail.com",
       password: "12345678",
@@ -93,7 +94,7 @@ describe("listado de Usuarios", () =>{
 describe("Actualización de Usuario", () =>{
   it("Se debe actualizar el usuario mediante su id", (done) => {
     chai.request(url)
-    .put('/users?id=4')
+    .put('/users?id=2')
     .send({
       //cuerpo
       username: "Jesús Hdz",
@@ -143,7 +144,7 @@ describe("Actualización de Usuario", () =>{
 describe("Eliminar Usuario", () =>{
   it("Se debe eliminar el usuario mediante su id", (done) => {
     chai.request(url)
-    .delete('/users?id=36')
+    .delete('/users?id=2')
     .end(function(err, res){
       expect(res).to.have.status(200);
       expect(res.body).to.have.property("message");
