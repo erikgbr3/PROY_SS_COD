@@ -11,18 +11,19 @@ describe("Crear Liga", () =>{
     .post('/leagues')
     .send({
       //cuerpo
+      id: 2,
       name: "Liga de Fútbol Rápido Sub 15",
       cost: 250,
       prize: "$1200 primer lugar, $800 segundo lugar",
       init: "2023/09/01",
       description: "Rama Varonil Libre",
-      ownerId: 4
+      ownerId: 1
     })
     .end(function(err, res){
       expect(res).to.have.status(200);
       expect(res.body).to.have.property('league');
       expect(res.body).to.have.property("message");
-      done();
+      done(); 
     })
   })
 
@@ -55,7 +56,7 @@ describe("Crear Liga", () =>{
       prize: "$1200 primer lugar, $800 segundo lugar",
       init: "01/10/2023",
       description: "Rama Varonil Libre",
-      ownerId: 4
+      ownerId: 1
     })
     .end(function(err, res){
       expect(res).to.have.status(400);
@@ -99,7 +100,7 @@ describe("listado de Ligas", () =>{
 describe("Actualización de Liga", () =>{
   it("Se debe actualizar el usuario mediante su id", (done) => {
     chai.request(url)
-    .put('/leagues?id=1')
+    .put('/leagues?id=2')
     .send({
       //cuerpo
       name: "Liga de Fútbol Rápido Sub 18",
@@ -107,7 +108,7 @@ describe("Actualización de Liga", () =>{
       prize: "$1200 primer lugar, $800 segundo lugar",
       init: "2023/09/01",
       description: "Rama Varonil Libre",
-      ownerId: 4
+      ownerId: 1
     })
     .end(function(err, res){
       expect(res).to.have.status(200);
@@ -133,7 +134,7 @@ describe("Actualización de Liga", () =>{
 
   it("No se actualizará el usuario si la inscripción es escrita en texto", (done) => {
     chai.request(url)
-    .put('/leagues?id=4')
+    .put('/leagues?id=2')
     .send({
       //cuerpo
       cost: "1000 pesos",
@@ -151,7 +152,7 @@ describe("Actualización de Liga", () =>{
 describe("Eliminar Liga", () =>{
   it("Se debe eliminar la liga mediante su id", (done) => {
     chai.request(url)
-    .delete('/leagues?id=6')
+    .delete('/leagues?id=2')
     .end(function(err, res){
       expect(res).to.have.status(200);
       expect(res.body).to.have.property("message");
