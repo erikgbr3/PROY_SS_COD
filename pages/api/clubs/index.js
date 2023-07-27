@@ -86,7 +86,7 @@ const addClub = async (req, res) => {
 
 const updateClub = async (req, res) => {
     try {
-        let { id } = req.query;
+        let { id } = req.body;
 
         await db.Club.update({...req.body}, {
             where: {
@@ -143,7 +143,7 @@ const updateClub = async (req, res) => {
             errors = error.errors.map((item) => ({
                 error: item.message,
                 field: item.path,
-            }));
+            })); 
         }
         return res.status(400).json(
             {

@@ -14,13 +14,16 @@ module.exports = {
         references: {
           model: 'Clubs',
           key: 'id'
-        }
+        },
+        allowNull: false
       },
       scoreHome: {
         type: Sequelize.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
+        allowNull: false
       },
       visitorTeamId: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Clubs',
@@ -28,6 +31,7 @@ module.exports = {
         }
       },
       scoreVisitor: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
@@ -38,6 +42,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       leagueId: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Leagues',
@@ -45,6 +50,7 @@ module.exports = {
         }
       },
       refereeId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       createdAt: {

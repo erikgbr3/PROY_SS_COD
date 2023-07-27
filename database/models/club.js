@@ -50,10 +50,44 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Club.init({
-    name: DataTypes.STRING,
-    locality: DataTypes.STRING,
-    fieldId: DataTypes.INTEGER,
-    ownerTeamId: DataTypes.INTEGER
+    name: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        is: {
+          args: /^[a-zA-ZáéíóúñÁÉÍÓÚ\s ]+$/,
+          msg: "El Nombre no debe contener Números"
+        }
+      }
+    },
+    locality: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        is: {
+          args: /^[a-zA-ZáéíóúñÁÉÍÓÚ\s ]+$/,
+          msg: "El Nombre de la localidad no debe contener Números"
+        }
+      }
+    },
+    fieldId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate:{
+        isInt: {
+          msg: "Solo se permiten números."
+        }
+      }
+    },
+    ownerTeamId: {
+      type:DataTypes.INTEGER,
+      allowNull:false,
+      validate:{
+        isInt: {
+          msg: "Solo se permiten números."
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Club',

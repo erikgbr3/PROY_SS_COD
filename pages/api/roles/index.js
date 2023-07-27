@@ -1,3 +1,4 @@
+import role from "@/database/models/role";
 import db from "database/models";
 
 export default function handler(req, res){
@@ -21,9 +22,18 @@ export default function handler(req, res){
 
 const getRole = async (req, res) => {
     try {
-        const roles = await db.Role.findAll();
-  
-        return res.json(roles)
+        const { id } = req.query;
+
+      if (id) {
+          const role = await db.Role.findByPk(id);
+          if (!role) {
+              return res.status(404).json({ error: true, message: 'No se encontró el rol' });
+          }
+          return res.json(role);
+      } else {
+          const role = await db.Role.findAll();
+          return res.json(role);
+      }
     } catch(error){
         console.log(error);
         let errors = [];
@@ -47,9 +57,9 @@ const addRole = async (req, res) => {
     try {
         console.log(req.body);
         
-        const league = await db.Role.create({...req.body});
+        const role = await db.Role.create({...req.body});
         res.json({
-            league,
+            role,
             message: 'Se registro el Rol correctamente'
         });
     } catch (error) {
@@ -73,16 +83,31 @@ const addRole = async (req, res) => {
 
 const updateRole = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id, ...updates } = req.body;
 
-        await db.Role.update({...req.body}, {
-            where: {
-                id:id
-            }
-        })
-        res.json({
-            message: 'El Rol fue actualizado'
+        if (!id || Object.keys(updates).length === 0) {
+        res.status(400).json({
+            error: 'Faltan datos para actualizar o el ID es incorrecto'
         });
+        } else {
+        const role = await db.Role.findOne({ where: { id } });
+
+        if (!role) {
+            res.status(400).json({
+            error: true,
+            message: 'ID de rol incorrecto'
+            });
+        } else {
+            await db.Role.update({...updates}, {
+            where: {
+                id: id
+            }
+            });
+            res.json({
+            message: 'El Rol fue actualizado'
+            });
+        }
+        }
 
     } catch(error){
         console.log(error);
@@ -113,7 +138,7 @@ const updateRole = async (req, res) => {
       if (!role) {
         return res.status(404).json({
           error: true,
-          message: 'No se encontró el Rol',
+          message: 'El Rol no existe',
         });
       }
 
@@ -128,7 +153,7 @@ const updateRole = async (req, res) => {
         let errors = [];
         if(error.errors){
             errors = error.errors.map((item) => ({
-                error: item.message,
+                error: item.message, 
                 field: item.path,
             }));
         }

@@ -20,8 +20,26 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   SportField.init({
-    ubication: DataTypes.STRING,
-    name: DataTypes.STRING
+    ubication: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        is: {
+          args: /^[a-zA-ZáéíóúñÁÉÍÓÚ\s ]+$/,
+          msg: "La ubicación no debe contener Números"
+        }
+      }
+    },
+    name: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        is: {
+          args: /^[a-zA-ZáéíóúñÁÉÍÓÚ\s ]+$/,
+          msg: "El Nombre no debe contener Números"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'SportField',

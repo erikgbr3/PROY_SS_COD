@@ -19,10 +19,18 @@ export default function handler(req, res) {
 
 const foulCardsList = async (req, res) => {
   try {
-      // leer las tarjetas de amonestación
-      const foulCards = await db.FoulCard.findAll({});  
+      const { id } = req.query;
 
-      return res.json(foulCards);
+      if (id) {
+          const foulCard = await db.FoulCard.findByPk(id);
+          if (!foulCard) {
+              return res.status(404).json({ error: true, message: 'No se encontró la tarjeta' });
+          }
+          return res.json(foulCard);
+      } else {
+          const foulCard = await db.FoulCard.findAll();
+          return res.json(foulCard);
+      }
   } catch (error) {
       return res.status(400).json(
           {
@@ -69,15 +77,32 @@ const addCard = async (req, res) => {
 //Realizar cambios
 const updateCard = async(req, res) => {
   try {
-    const {id} = req.query;
-    await db.FoulCard.update({...req.body}, {
-      where: {
-        id:id
-      }
-    })
-    res.json({
-      message: "Se realizaron Ajustes en la amonestación"
-    });
+    const { id, ...updates } = req.body;
+
+        if (!id || Object.keys(updates).length === 0) {
+        res.status(400).json({
+            error: 'Faltan datos para actualizar o el ID es incorrecto'
+        });
+        } else {
+        const foulCard = await db.FoulCard.findOne({ where: { id } });
+
+        if (!foulCard) {
+            res.status(400).json({
+            error: true,
+            message: 'ID de la tarjeta incorrecto'
+            });
+        } else { 
+            await db.FoulCard.update({...updates}, {
+            where: {
+                id: id
+            }
+            });
+            res.json({
+            message: 'Se realizaron Aujustes en la amonestación'
+            });
+        }
+        }
+  
   } catch (error) {
     console.log(error);
     let errors = [];
@@ -102,15 +127,22 @@ const updateCard = async(req, res) => {
 //eliminar amonestación
 const deleteCard = async(req, res) =>{
   try {
-    const {id} = req.query;
-    await db.FoulCard.destroy({
-      where: {
-        id: id
+    const { id } = req.query;
+
+      const foulCard = await db.FoulCard.findOne({ where: { id: id } });
+
+      if (!foulCard) {
+        return res.status(404).json({
+          error: true,
+          message: 'No se encontró la tarjeta',
+        });
       }
-    });
-    res.json({
-      message: "La tarjeta fue quitada"
-    });
+
+        await foulCard.destroy();
+
+        res.json({
+            message: 'La tarjeta fue quitada'
+        })
   }catch (error){
     console.log(error);
     let errors = [];

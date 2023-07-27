@@ -1,30 +1,39 @@
+import goalscore from "@/database/models/goalscore";
 import db from "database/models";
 
 export default function handler(req, res){
     switch(req.method){
         case 'GET':
-            return getGoalScorers (req, res);
+            return getGoalScore (req, res);
 
         case 'POST':
-            return addGoalScorer (req, res);
+            return addGoalScore (req, res);
 
         case 'PUT':
-            return updateGoalScorer (req, res);
+            return updateGoalScore (req, res);
 
         case 'DELETE':
-            return deleteGoalScorer (req, res);
+            return deleteGoalScore (req, res);
 
         default:
             res.status(400).json({error: true, message: 'Petición errónea'});
     }
 }
 
-const getGoalScorers = async (req, res) => {
+const getGoalScore = async (req, res) => {
     try {
-            const goalScorers = await db.GoalScore.findAll({
-            });
+        const { id } = req.query;
 
-        return res.json(goalScorers);
+        if (id) {
+            const goalScore = await db.GoalScore.findByPk(id);
+            if (!goalScore) {
+                return res.status(404).json({ error: true, message: 'No se encontró la puntuación' });
+            }
+            return res.json(goalScore);
+        } else {
+            const goalScore = await db.GoalScore.findAll();
+            return res.json(goalScore);
+        }
     } catch(error){
         console.log(error);
         let errors = [];
@@ -44,13 +53,13 @@ const getGoalScorers = async (req, res) => {
     }
   }
 
-const addGoalScorer = async (req, res) => {
+const addGoalScore = async (req, res) => {
     try {
         console.log(req.body);
         
-        const goalScorer = await db.GoalScore.create({...req.body});
+        const goalScore = await db.GoalScore.create({...req.body});
         res.json({
-            goalScorer,
+            goalScore,
             message: 'El marcador fue registrado correctamente'
         });
     } catch (error) {
@@ -72,18 +81,33 @@ const addGoalScorer = async (req, res) => {
     }
 }
 
-const updateGoalScorer = async (req, res) => {
+const updateGoalScore = async (req, res) => {
     try {
-        let { id } = req.query;
+        const { id, ...updates } = req.body;
 
-        await db.GoalScore.update({...req.body}, {
-            where: {
-                id : id
-            },
-        })
-        res.json({
-            message: 'El marcador fue actualizado'
+        if (!id || Object.keys(updates).length === 0) {
+        res.status(400).json({
+            error: 'Faltan datos para actualizar o el ID es incorrecto'
         });
+        } else {
+        const goalScore = await db.GoalScore.findOne({ where: { id } });
+
+        if (!goalScore) {
+            res.status(400).json({
+            error: true,
+            message: 'ID de la puntuación incorrecto'
+            });
+        } else { 
+            await db.GoalScore.update({...updates}, {
+            where: {
+                id: id
+            }
+            });
+            res.json({
+            message: 'El marcador fue actualizado'
+            });
+        }
+        }
 
     } catch(error){
         console.log(error);
@@ -104,21 +128,21 @@ const updateGoalScorer = async (req, res) => {
     }
   }
 
-  const deleteGoalScorer = async (req, res) => {
+  const deleteGoalScore = async (req, res) => {
     console.log('Delete goal scorer method called');
     try {
         const { id } = req.query;
 
-      const goalScorer = await db.GoalScore.findOne({ where: { id: id } });
+      const goalScore = await db.GoalScore.findOne({ where: { id: id } });
 
-      if (!goalScorer) {
+      if (!goalScore) {
         return res.status(404).json({
           error: true,
           message: 'No se encontró el marcador',
         });
       }
 
-        await goalScorer.destroy();
+        await goalScore.destroy();
 
         res.json({
             message: 'El marcador fue eliminado'
