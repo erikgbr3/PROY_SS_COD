@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "admin",
+    "password": "kBlhTjBL",
+    "database": "SportService",
+    "host": "mysql-137630-0.cloudclusters.net",
+    "port": "10076",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "admin",
+    "password": "kBlhTjBL",
+    "database": "SportService",
+    "host": "mysql-137630-0.cloudclusters.net",
+    "port": "10076",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "admin",
+    "password": "kBlhTjBL",
+    "database": "SportService",
+    "host": "mysql-137630-0.cloudclusters.net",
+    "port": "10076",
+    "dialect": "mysql"
+  }
+}

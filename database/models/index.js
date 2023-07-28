@@ -9,6 +9,18 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
+import club from './club';
+import foulcard from './foulcard';
+import goalscore from './goalscore';
+import league from './league';
+import match from './match';
+import player from './player';
+import positiontableleague from './positiontableleague';
+import role from './role';
+import sportfield from './sportfield';
+import suscription from './suscription';
+import user from './user';
+
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -16,28 +28,39 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+db.Club = club(sequelize, Sequelize.DataTypes);
+db.FoulCard = foulcard(sequelize, Sequelize.DataTypes);
+db.GoalScore = goalscore(sequelize, Sequelize.DataTypes);
+db.League = league(sequelize, Sequelize.DataTypes);
+db.Match = match(sequelize, Sequelize.DataTypes);
+db.Player = player(sequelize, Sequelize.DataTypes);
+db.PositionTableLeague = positiontableleague(sequelize, Sequelize.DataTypes);
+db.Role = role(sequelize, Sequelize.DataTypes);
+db.SportField = sportfield(sequelize, Sequelize.DataTypes);
+db.Suscription = suscription(sequelize, Sequelize.DataTypes);
+db.User = user(sequelize, Sequelize.DataTypes);
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+
+const Suscription = db.Suscription;
+const TableLeague = db.PositionTableLeague;
+
+Suscription.addHook('afterCreate', async (registroOrigen, options) => {
+  try {
+    await TableLeague.create({
+      clubId: registroOrigen.clubId,
+      leagueId: registroOrigen.leagueId,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
 
 module.exports = db;
