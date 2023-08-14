@@ -3,7 +3,7 @@ let chaiHttp = require('chai-http');
 const expect = chai.expect;
 
 chai.use(chaiHttp);
-const url = 'http://localhost:3000/api';
+const url = 'https://webservice-jjamw0pn5-sportservice2023-gmailcom.vercel.app/api';
 
 describe("Registro de Usuario", () =>{
   it("Se debe registrar un nuevo usuario", (done) => {

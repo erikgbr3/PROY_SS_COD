@@ -3,7 +3,7 @@ let chaiHttp = require('chai-http');
 const expect = chai.expect;
 
 chai.use(chaiHttp);
-const url = 'http://localhost:3000/api';
+const url = 'https://webservice-jjamw0pn5-sportservice2023-gmailcom.vercel.app/api';
 
 describe("Suscribir club a una liga", () =>{
   it("se debe inscribir un club a una liga cuando se indique que club se inscribe en que liga", (done) => {
