@@ -1,10 +1,9 @@
 {
   "development": {
-    "username": "admin",
-    "password": "xcZxEFgw",
+    "username": "root",
+    "password": null,
     "database": "SportService",
-    "host": "mysql-139128-0.cloudclusters.net",
-    "port": "18034",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {

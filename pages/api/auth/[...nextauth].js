@@ -12,12 +12,7 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         email: { label: "Correo Electrónico", type: "email", placeholder: "Correo Electrónico" },
         password: { label: "Contraseña", type: "password", placeholder: 'Contraseña' }
@@ -41,7 +36,7 @@ export const authOptions = {
   ],
   // rutas de las vistas
   pages: {
-    signIn: '/login',
+    signIn: '/index',
     error: '/login',
     //newUser: '/auth/register'
   },
@@ -57,7 +52,7 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, account, user }) {
-      console.log("jwt");
+      console.log("jwt", token);
       //console.log({ token, account, user });
       //token.userRole = "admin"
       
