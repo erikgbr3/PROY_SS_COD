@@ -1,47 +1,52 @@
+import { validateToken } from "../../../validateToken";
 import db from "database/models";
 
-export default function handler(req, res){
-    switch(req.method){
+export default function handler(req, res) {
+    switch (req.method) {
         case 'GET':
-            return getLeague (req, res);
+            return validateToken(req, res, () => getLeague(req, res));
 
         case 'POST':
-            return addLeague (req, res);
+            return addLeague(req, res);
 
         case 'PUT':
-            return updateLeague (req, res);
+            return updateLeague(req, res);
 
         case 'DELETE':
-            return deleteLeague (req, res);
+            return deleteLeague(req, res);
 
         default:
-            res.status(400).json({error: true, message: 'Petición errónea'});
+            res.status(400).json({ error: true, message: 'Petición errónea' });
     }
 }
 
 const getLeague = async (req, res) => {
     try {
-        const { ownerId } = req.query;
-
         let leagues = [];
-        if (ownerId) {
-            leagues = await db.League.findAll({
-                where: {
-                    ownerId,  
-                },
-                include: ['user'],
-            });
+        if (req.user) {
+            const { userId } = req.user;
+            if (userId) {
+                leagues = await db.League.findAll({
+                    where: {
+                        ownerId: userId,
+                    },
+                    include: ['user'],
+                });
+            } else {
+                leagues = await db.League.findAll({
+                    include: ['user'],
+                });
+            }
         } else {
             leagues = await db.League.findAll({
                 include: ['user'],
             });
         }
-
         return res.json(leagues);
-    } catch(error){
+    } catch (error) {
         console.log(error);
         let errors = [];
-        if(error.errors){
+        if (error.errors) {
             errors = error.errors.map((item) => ({
                 error: item.message,
                 field: item.path,
@@ -55,13 +60,13 @@ const getLeague = async (req, res) => {
             }
         )
     }
-  }
+}
 
 const addLeague = async (req, res) => {
     try {
         console.log(req.body);
-        
-        const league = await db.League.create({...req.body});
+
+        const league = await db.League.create({ ...req.body });
         res.json({
             league,
             message: 'La Liga fue registrada correctamente'
@@ -89,19 +94,19 @@ const updateLeague = async (req, res) => {
     try {
         const { id } = req.query;
 
-        await db.League.update({...req.body}, {
+        await db.League.update({ ...req.body }, {
             where: {
-                id:id
+                id: id
             }
         })
         res.json({
             message: 'La Liga fue actualizada'
         });
 
-    } catch(error){
+    } catch (error) {
         console.log(error);
         let errors = [];
-        if(error.errors){
+        if (error.errors) {
             errors = error.errors.map((item) => ({
                 error: item.message,
                 field: item.path,
@@ -115,20 +120,20 @@ const updateLeague = async (req, res) => {
             }
         )
     }
-  }
+}
 
-  const deleteLeague = async (req, res) => {
+const deleteLeague = async (req, res) => {
     try {
         const { id } = req.query;
 
-      const league = await db.League.findOne({ where: { id: id } });
+        const league = await db.League.findOne({ where: { id: id } });
 
-      if (!league) {
-        return res.status(404).json({
-          error: true,
-          message: 'No se encontró la liga',
-        });
-      }
+        if (!league) {
+            return res.status(404).json({
+                error: true,
+                message: 'No se encontró la liga',
+            });
+        }
 
         await league.destroy();
 
@@ -136,10 +141,10 @@ const updateLeague = async (req, res) => {
             message: 'La liga fue Eliminada'
         })
 
-    } catch(error){
+    } catch (error) {
         console.log('Error in delete league', error);
         let errors = [];
-        if(error.errors){
+        if (error.errors) {
             errors = error.errors.map((item) => ({
                 error: item.message,
                 field: item.path,
@@ -153,4 +158,4 @@ const updateLeague = async (req, res) => {
             }
         )
     }
-  }
+}

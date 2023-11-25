@@ -76,7 +76,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: "La fecha de inicio es obligatoria."
         },
         is:{
-          args: /^(\d{4})\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/,
+          args: /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
           msg: "Formato de fecha no aceptado."
         }
       }
