@@ -64,7 +64,6 @@ const addMatch = async (req, res) => {
     console.log(req.body);
     //Los datos recibidos son guardados
     const matches = await db.Match.create({...req.body});
-    const result = await posicionadorTabla();
 
     // ToDO con el resultado ????
     res.json({
@@ -103,7 +102,7 @@ const editMatch = async(req, res) => {
         id:id
       }
     })
-    const result = await posicionadorTabla();
+
     res.json({
       result,
       message: "El partido fue Actualizado"
