@@ -24,6 +24,18 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'ownerId',
         }  
       );
+      models.User.hasOne(models.Club,
+        {
+          as: 'club',
+          foreignKey: 'ownerTeamId'
+        }
+      );
+      models.User.hasMany(models.Match,
+        {
+          as: 'match',
+          foreignKey: 'refereeId'
+        }
+      );
     }
   }
   User.init({
