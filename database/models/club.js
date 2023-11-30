@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'fieldId',
         }  
       );
+      models.Club.belongsTo(models.User,
+        {
+          as: 'owner',
+          foreignKey: 'ownerTeamId'
+        }
+      );
       models.Club.hasMany(models.Player,
         {
           as: 'players',

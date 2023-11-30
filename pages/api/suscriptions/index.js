@@ -21,7 +21,9 @@ export default function handler(req, res){
 
 const listSuscriptions = async (req, res) => {
     try {
-        const suscriptions = await db.Suscription.findAll()
+        const suscriptions = await db.Suscription.findAll({
+            order: [['clubId', 'ASC']]
+        })
         return res.json(suscriptions);
     } catch(error){
         console.log(error);

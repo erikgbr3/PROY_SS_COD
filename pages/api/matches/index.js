@@ -21,9 +21,33 @@ export default function handler(req, res) {
 const matchesList = async (req, res) => {
   try {
       // leer los Partidos
-      const matches = await db.Match.findAll();  
+      const matches = await db.Match.findAll({
+        order: [['date', 'ASC']],
+        
+        include: [
+          {
+            model: db.Club,
+            as: 'club',
+            attributes: ['name'],
+          },
+          {
+            model: db.Club,
+            as: 'clubs',
+            attributes: ['name'],
+          }
+        ]
+      });  
 
-      return res.json(matches);
+      const matchesByDate = {};
+      matches.forEach((match) => {
+        const date = match.date.replace(/\//g, '-'); // Reemplazar '/' por '-' para asegurar compatibilidad con ISO
+        if (!matchesByDate[date]) {
+          matchesByDate[date] = [];
+        }
+        matchesByDate[date].push(match);
+      });
+  
+      return res.json(matchesByDate);
   } catch (error) {
       return res.status(400).json(
           {

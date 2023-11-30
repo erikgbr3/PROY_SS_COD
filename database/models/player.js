@@ -87,10 +87,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: "El número de posición es obligatorio"
+          msg: "La posición es obligatoria"
         },
-        isNumeric: {
-          msg: "Solo se admiten números"
+        is: {
+          args: /^[a-zA-ZáéíóúñÁÉÍÓÚ \s]+$/,
+          msg: "Solo se admiten letras"
         }
       }
     },
@@ -100,6 +101,9 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: {
           msg: "El número de teléfono es obligatorio"
+        },
+        isNumeric: {
+          msg: "Solo se admiten números"
         }
       }
     },
