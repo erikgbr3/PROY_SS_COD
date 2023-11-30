@@ -38,7 +38,16 @@ const matchesList = async (req, res) => {
         ]
       });  
 
-      return res.json(matches);
+      const matchesByDate = {};
+      matches.forEach((match) => {
+        const date = match.date.replace(/\//g, '-'); // Reemplazar '/' por '-' para asegurar compatibilidad con ISO
+        if (!matchesByDate[date]) {
+          matchesByDate[date] = [];
+        }
+        matchesByDate[date].push(match);
+      });
+  
+      return res.json(matchesByDate);
   } catch (error) {
       return res.status(400).json(
           {
