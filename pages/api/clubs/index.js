@@ -3,7 +3,7 @@ import db from "database/models";
 export default function handler(req, res){
     switch(req.method){
         case 'GET':
-            return getClub (req, res);
+            return validateToken(req, res, () =>getClub (req, res));
 
         case 'POST':
             return addClub (req, res);
@@ -21,21 +21,27 @@ export default function handler(req, res){
 
 const getClub = async (req, res) => {
     try {
-        const { fieldId } = req.query;
-
         let clubs = [];
-
-        if (fieldId) {
-            clubs = await db.Club.findAll({
-                where: {
-                    fieldId,  
-                },
-                include: ['sportfield'],
-            });
+        if (req.user) {
+            const { userId } = req.user;
+            if (userId) {
+                clubs = await db.Club.findAll({
+                    where: {
+                        ownerTeamId: userId,
+                    },
+                    include: ['sportfield'],
+                });
+            } else {
+                clubs = await db.Club.findAll({
+                    include: ['sportfield'],
+                });
+            }
         } else {
             clubs = await db.Club.findAll({
+                include: ['sportfield'],
             });
         }
+
         return res.json(clubs);
     } catch(error){
         console.log(error);
