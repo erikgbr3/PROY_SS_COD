@@ -21,9 +21,33 @@ export default function handler(req, res) {
 const matchesList = async (req, res) => {
   try {
       // leer los Partidos
-      const matches = await db.Match.findAll();  
+      const matches = await db.Match.findAll({
+        order: [['date', 'ASC']],
+        
+        include: [
+          {
+            model: db.Club,
+            as: 'club',
+            attributes: ['name'],
+          },
+          {
+            model: db.Club,
+            as: 'clubs',
+            attributes: ['name'],
+          }
+        ]
+      });  
 
-      return res.json(matches);
+      const matchesByDate = {};
+      matches.forEach((match) => {
+        const date = match.date.replace(/\//g, '-'); // Reemplazar '/' por '-' para asegurar compatibilidad con ISO
+        if (!matchesByDate[date]) {
+          matchesByDate[date] = [];
+        }
+        matchesByDate[date].push(match);
+      });
+  
+      return res.json(matchesByDate);
   } catch (error) {
       return res.status(400).json(
           {
@@ -40,7 +64,6 @@ const addMatch = async (req, res) => {
     console.log(req.body);
     //Los datos recibidos son guardados
     const matches = await db.Match.create({...req.body});
-    const result = await posicionadorTabla();
 
     // ToDO con el resultado ????
     res.json({
@@ -79,7 +102,7 @@ const editMatch = async(req, res) => {
         id:id
       }
     })
-    const result = await posicionadorTabla();
+
     res.json({
       result,
       message: "El partido fue Actualizado"

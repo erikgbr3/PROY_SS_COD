@@ -29,6 +29,12 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'leagueId',
         }  
       );
+      models.Match.belongsTo(models.User,
+        {
+          as: 'referee',
+          foreignKey: 'refereeId'
+        }
+      );
       models.Match.hasMany(models.GoalScore,
         {
           as: 'goalscore',
