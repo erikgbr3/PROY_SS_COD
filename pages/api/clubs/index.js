@@ -1,4 +1,5 @@
 import db from "database/models";
+import { validateToken } from "../../../validateToken";
 
 export default function handler(req, res){
     switch(req.method){
@@ -29,16 +30,16 @@ const getClub = async (req, res) => {
                     where: {
                         ownerTeamId: userId,
                     },
-                    include: ['sportfield'],
+                    include: ['owner'],
                 });
             } else {
                 clubs = await db.Club.findAll({
-                    include: ['sportfield'],
+                    include: ['owner'],
                 });
             }
         } else {
             clubs = await db.Club.findAll({
-                include: ['sportfield'],
+                include: ['owner'],
             });
         }
 
