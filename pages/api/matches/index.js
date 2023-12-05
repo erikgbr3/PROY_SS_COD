@@ -1,12 +1,13 @@
 //Detecta el reqyesr e invoca la función.
 
-import db from "@/database/models"
+import db from "@/database/models";
+import { validateToken } from "../../../validateToken";
 import posicionadorTabla from "@/database/services/posicionadorTabla";
 
 export default function handler(req, res) {
   switch(req.method){
     case 'GET':
-      return matchesList(req, res);
+      return validateToken(req, res, () => matchesList(req, res));
     case 'POST':
       return addMatch(req, res);
     case 'PUT':
@@ -20,10 +21,17 @@ export default function handler(req, res) {
 
 const matchesList = async (req, res) => {
   try {
-      // leer los Partidos
-      const matches = await db.Match.findAll({
+
+    console.log("id liga rec",req.query);
+    const {leagueId} = req.query
+    let matches =[];
+    if (leagueId) {
+      matches = await db.Match.findAll({
+        where:{
+        leagueId: leagueId,
+        },
         order: [['date', 'ASC']],
-        
+            
         include: [
           {
             model: db.Club,
@@ -36,11 +44,32 @@ const matchesList = async (req, res) => {
             attributes: ['name'],
           }
         ]
-      });  
-
+        }
+        );
+      
+    } else {
+      matches = await db.Match.findAll({
+        include: ['league'],
+        order: [['date', 'ASC']],
+            
+        include: [
+          {
+            model: db.Club,
+            as: 'club',
+            attributes: ['name'],
+          },
+          {
+            model: db.Club,
+            as: 'clubs',
+            attributes: ['name'],
+          }
+        ]
+      })
+    }
+    
       const matchesByDate = {};
       matches.forEach((match) => {
-        const date = match.date.replace(/\//g, '-'); // Reemplazar '/' por '-' para asegurar compatibilidad con ISO
+        const date = match.date.replace(/\//g, '-');
         if (!matchesByDate[date]) {
           matchesByDate[date] = [];
         }
@@ -104,9 +133,9 @@ const editMatch = async(req, res) => {
     })
 
     res.json({
-      result,
       message: "El partido fue Actualizado"
     });
+
   } catch (error) {
     console.log(error);
     let errors = [];
