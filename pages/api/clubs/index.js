@@ -1,9 +1,10 @@
 import db from "database/models";
+import { validateToken } from "../../../validateToken";
 
 export default function handler(req, res){
     switch(req.method){
         case 'GET':
-            return getClub (req, res);
+            return validateToken(req, res, () =>getClub (req, res));
 
         case 'POST':
             return addClub (req, res);
@@ -21,40 +22,58 @@ export default function handler(req, res){
 
 const getClub = async (req, res) => {
     try {
-        const { fieldId } = req.query;
-
-        let clubs = [];
-
-        if (fieldId) {
-            clubs = await db.Club.findAll({
-                where: {
-                    fieldId,  
-                },
-                include: ['sportfield'],
-            });
+      let clubs = [];
+  
+      const { leagueId, userId } = req.query; // Extract leagueId and userId from query parameters
+  
+      if (userId) {
+        // Fetch clubs owned by a specific user
+        clubs = await db.Club.findAll({
+          where: {
+            ownerTeamId: userId,
+          },
+          include: ['owner', 'suscription'],
+        });
+      } else {
+        // Check if leagueId is provided, fetch clubs subscribed to that league
+        if (leagueId) {
+          clubs = await db.Club.findAll({
+            include: [
+              {
+                model: db.Suscription,
+                as: 'suscription',
+                where: { leagueId },
+              },
+              'owner',
+            ],
+          });
         } else {
-            clubs = await db.Club.findAll({
-            });
+          // Fetch all clubs if neither leagueId nor userId is provided
+          clubs = await db.Club.findAll({
+            include: ['owner', 'suscription'],
+          });
         }
-        return res.json(clubs);
-    } catch(error){
-        console.log(error);
-        let errors = [];
-        if(error.errors){
-            errors = error.errors.map((item) => ({
-                error: item.message,
-                field: item.path,
-            }));
-        }
-        return res.status(400).json(
-            {
-                error: true,
-                message: `Ocurrio un error al procesar la petición: ${error.message}`,
-                errors,
-            }
-        )
+      }
+  
+      return res.json(clubs);
+    } catch (error) {
+      console.log(error);
+      let errors = [];
+      if (error.errors) {
+        errors = error.errors.map((item) => ({
+          error: item.message,
+          field: item.path,
+        }));
+      }
+      return res.status(400).json({
+        error: true,
+        message: `Ocurrio un error al procesar la petición: ${error.message}`,
+        errors,
+      });
     }
-  }
+  };
+  
+  
 
 const addClub = async (req, res) => {
     try {
