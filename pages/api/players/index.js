@@ -21,36 +21,43 @@ export default function handler(req, res){
 
 const getPlayers = async (req, res) => {
     try {
-        const { id } = req.query;
-
-        if (id) {
-            const player = await db.Player.findByPk(id);
-            if (!player) {
-                return res.status(404).json({ error: true, message: 'No se encontró el jugador' });
-            }
-            return res.json(player);
-        } else {
-            const player = await db.Player.findAll();
-            return res.json(player);
+      const { id, clubId } = req.query;
+  
+      if (id) {
+        const player = await db.Player.findByPk(id);
+        if (!player) {
+          return res.status(404).json({ error: true, message: 'No se encontró el jugador' });
         }
-    } catch(error){
-        console.log(error);
-        let errors = [];
-        if(error.errors){
-            errors = error.errors.map((item) => ({
-                error: item.message,
-                field: item.path,
-            }));
-        }
-        return res.status(400).json(
-            {
-                error: true,
-                message: `Ocurrio un error al procesar la petición: ${error.message}`,
-                errors,
-            }
-        )
+        return res.json(player);
+      } else if (clubId) {
+        const players = await db.Player.findAll({
+          where: {
+            clubId: clubId,
+          },
+        });
+        return res.json(players);
+      } else {
+        const players = await db.Player.findAll();
+        return res.json(players);
+      }
+    } catch (error) {
+ 
+      console.log(error);
+      let errors = [];
+      if (error.errors) {
+        errors = error.errors.map((item) => ({
+          error: item.message,
+          field: item.path,
+        }));
+      }
+      return res.status(400).json({
+        error: true,
+        message: `Ocurrió un error al procesar la petición: ${error.message}`,
+        errors,
+      });
     }
-  }
+  };
+  
 
 const addPlayer = async (req, res) => {
     try {
@@ -130,38 +137,47 @@ const updatePlayer = async (req, res) => {
   const deletePlayer = async (req, res) => {
     console.log('Delete player method called');
     try {
-        const { id } = req.query;
-
+      const { id } = req.query;
+  
       const player = await db.Player.findOne({ where: { id: id } });
-
+  
       if (!player) {
         return res.status(404).json({
           error: true,
           message: 'No se encontró el jugador',
         });
       }
-
-        await player.destroy();
-
-        res.json({
-            message: 'El jugador fue eliminado'
-        })
-
-    } catch(error){
-        console.log('Error in delete player', error);
-        let errors = [];
-        if(error.errors){
-            errors = error.errors.map((item) => ({
-                error: item.message,
-                field: item.path,
-            }));
-        }
-        return res.status(400).json(
-            {
-                error: true,
-                message: `Ocurrio un error al procesar la petición: ${error.message}`,
-                errors,
-            }
-        )
+  
+      // Eliminar registros asociados en FoulCard
+      await db.FoulCard.destroy({ 
+        where: { playerId: id } 
+    });
+  
+      // Eliminar registros asociados en GoalScore
+      await db.GoalScore.destroy({ 
+        where: { playerId: id } 
+    });
+  
+      // Finalmente, eliminar el jugador
+      await player.destroy();
+  
+      res.json({
+        message: 'El jugador y sus registros asociados fueron eliminados',
+      });
+    } catch (error) {
+      console.log('Error in delete player', error);
+      let errors = [];
+      if (error.errors) {
+        errors = error.errors.map((item) => ({
+          error: item.message,
+          field: item.path,
+        }));
+      }
+      return res.status(400).json({
+        error: true,
+        message: `Ocurrio un error al procesar la petición: ${error.message}`,
+        errors,
+      });
     }
-  }
+  };
+  

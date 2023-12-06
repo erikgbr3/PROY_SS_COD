@@ -158,41 +158,52 @@ const editMatch = async(req, res) => {
 }
 
 //Eliminar Encuentro
-const deleteMatch = async(req, res) =>{
+// Eliminar Encuentro
+const deleteMatch = async (req, res) => {
   try {
     const { id } = req.query;
 
-      const match = await db.Match.findOne({ where: { id: id } });
+    const match = await db.Match.findOne({ where: { id: id } });
 
-      if (!match) {
-        return res.status(404).json({
-          error: true,
-          message: 'No se encontró el partido',
-        });
-      }
+    if (!match) {
+      return res.status(404).json({
+        error: true,
+        message: 'No se encontró el partido',
+      });
+    }
 
-        await match.destroy();
+    // Eliminar registros asociados en GoalScore
+    await db.GoalScore.destroy({
+      where: { matchId: match.id },
+    });
 
-        res.json({
-            message: 'El partido fue eliminado'
-        })
-  }catch (error){
+    // Eliminar registros asociados en FoulCard
+    await db.FoulCard.destroy({
+      where: { matchId: match.id },
+    });
+
+    // Finalmente, eliminar el partido
+    await match.destroy();
+
+    res.json({
+      message: 'El partido y sus registros asociados fueron eliminados',
+    });
+  } catch (error) {
     console.log(error);
     let errors = [];
-    //si catch tiene mensajes de error
-    if(error.errors){
-      //extraer la información de los campos con error
+    // si catch tiene mensajes de error
+    if (error.errors) {
+      // extraer la información de los campos con error
       errors = error.errors.map((item) => ({
         error: item.message,
         field: item.path,
       }));
     }
-    return res.status(400).json(
-      {
-        error:true,
-        message: `Ocurrió un error al procesar la petición: ${error.message}`,
-        errors
-      }
-    )
+    return res.status(400).json({
+      error: true,
+      message: `Ocurrió un error al procesar la petición: ${error.message}`,
+      errors,
+    });
   }
-}
+};
+
