@@ -21,7 +21,11 @@ export default function handler(req, res){
 
 const listSuscriptions = async (req, res) => {
     try {
+        const { clubId } = req.query;
         const suscriptions = await db.Suscription.findAll({
+            where: {
+                clubId: clubId,
+            },
             order: [['clubId', 'ASC']],
             include: [
                 {

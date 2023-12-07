@@ -21,11 +21,45 @@ export default function handler(req, res) {
 
 const matchesList = async (req, res) => {
   try {
-
-    console.log("id liga rec",req.query);
     const {leagueId} = req.query
     let matches =[];
-    if (leagueId) {
+    if (req.user) {
+      const { userId } = req.user;
+      if (userId) {
+          matches = await db.Match.findAll({
+              where: {
+                  refereeId: userId,
+              },
+              include: [
+                {
+                  model: db.Club,
+                  as: 'club',
+                  attributes: ['name'],
+                },
+                {
+                  model: db.Club,
+                  as: 'clubs',
+                  attributes: ['name'],
+                }
+              ]
+          });
+      } else {
+          matches = await db.Match.findAll({
+            include: [
+              {
+                model: db.Club,
+                as: 'club',
+                attributes: ['name'],
+              },
+              {
+                model: db.Club,
+                as: 'clubs',
+                attributes: ['name'],
+              }
+            ]
+          });
+      }
+  } else {
       matches = await db.Match.findAll({
         where:{
         leagueId: leagueId,
@@ -47,25 +81,7 @@ const matchesList = async (req, res) => {
         }
         );
       
-    } else {
-      matches = await db.Match.findAll({
-        include: ['league'],
-        order: [['date', 'ASC']],
-            
-        include: [
-          {
-            model: db.Club,
-            as: 'club',
-            attributes: ['name'],
-          },
-          {
-            model: db.Club,
-            as: 'clubs',
-            attributes: ['name'],
-          }
-        ]
-      })
-    }
+    } 
     
       const matchesByDate = {};
       matches.forEach((match) => {
@@ -97,7 +113,6 @@ const addMatch = async (req, res) => {
     // ToDO con el resultado ????
     res.json({
       matches,
-      result,
       message: "Partido Creado"
     });
   }catch (error){
